@@ -1,33 +1,30 @@
 version: 0.2
 
 phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+      - sleep 2  # 2초 대기 (테스트용)
+
   pre_build:
     commands:
-      - echo Logging in to Docker Hub...
-      - echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-      - echo Successfully logged in to Docker Hub.
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 711387094022.dkr.ecr.ap-northeast-2.amazonaws.com
-      - echo Successfully logged in to Amazon ECR.
+      - echo "Pre-build phase..."
+      - date  # 현재 날짜 및 시간 출력
+      - sleep 2
 
   build:
     commands:
-      - echo Building the Docker image...
-      - docker build -t juice-shop-scp .
-      - echo Docker image built successfully.
-      - echo Tagging the Docker image...
-      - docker tag juice-shop-scp:latest 711387094022.dkr.ecr.ap-northeast-2.amazonaws.com/juice-shop-scp:latest
-      - echo Docker image tagged successfully.
+      - echo "Build phase started..."
+      - echo "Running some fake build commands..."
+      - sleep 3
+      - echo "Build phase completed."
 
   post_build:
     commands:
-      - echo Pushing the Docker image to Amazon ECR...
-      - docker push 711387094022.dkr.ecr.ap-northeast-2.amazonaws.com/juice-shop-scp:latest
-      - echo Docker image pushed successfully.
-      - echo Creating imagedefinitions.json file for ECS deployment...
-      - echo '[{"name":"juice-shop-scp","imageUri":"711387094022.dkr.ecr.ap-northeast-2.amazonaws.com/juice-shop-scp:latest"}]' > imagedefinitions.json
-      - echo imagedefinitions.json created successfully.
+      - echo "Post-build phase..."
+      - echo "Build completed successfully!"
+      - sleep 2
 
 artifacts:
   files:
-    - imagedefinitions.json
+    - "**/*"
